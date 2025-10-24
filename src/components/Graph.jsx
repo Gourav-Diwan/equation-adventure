@@ -29,12 +29,14 @@ const Graph = ({
             stroke="#fff"
             type="number"
             domain={['dataMin', 'dataMax']}
+            tickFormatter={(value) => value.toFixed(0)}
             label={{ value: `${levelData.xLabel} (x)`, position: 'insideBottom', offset: -5, fill: '#fff' }}
           />
           <YAxis 
             stroke="#fff"
             type="number"
             domain={['dataMin', 'dataMax']}
+            tickFormatter={(value) => value.toFixed(0)} 
             label={{ value: `${levelData.yLabel} (y)`, angle: -90, position: 'insideLeft', fill: '#fff' }}
           />
           <Tooltip 
