@@ -40,9 +40,31 @@ const Graph = ({
             label={{ value: `${levelData.yLabel} (y)`, angle: -90, position: 'insideLeft', fill: '#fff' }}
           />
           <Tooltip 
-            contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #555' }}
-            labelStyle={{ color: '#fff' }}
-            formatter={(value) => value !== null ? value.toFixed(1) : 'N/A'}
+            content={({ active, payload }) => {
+              if (active && payload && payload.length) {
+                const xValue = payload[0].payload.x;
+                const y1Value = payload[0].payload.y1;
+                
+                return (
+                  <div style={{ 
+                    backgroundColor: '#1a1a2e', 
+                    border: '1px solid #555', 
+                    padding: '10px',
+                    borderRadius: '4px'
+                  }}>
+                    <p style={{ color: '#fff', margin: '0 0 5px 0', fontWeight: 'bold' }}>
+                      {levelData.xLabel}: {xValue.toFixed(1)}
+                    </p>
+                    {y1Value !== null && (
+                      <p style={{ color: '#a855f7', margin: '0' }}>
+                        {levelData.yLabel}: {y1Value.toFixed(1)}
+                      </p>
+                    )}
+                  </div>
+                );
+              }
+              return null;
+            }}
           />
           <Line 
             type="monotone" 
