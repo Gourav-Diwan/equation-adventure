@@ -1,8 +1,60 @@
-import { useState } from 'react';
-import { Wand2, Save, Home } from 'lucide-react';
-import { creatorTemplates } from '../data/levelTemplates';
+import { useState, useEffect } from 'react';
+import { Wand2, Save, Home, Skull, Heart, Trophy, Clock } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+
+const creatorTemplates = [
+  { 
+    id: 'kills-deaths', 
+    icon: Skull, 
+    name: 'Game Stats',
+    color: 'purple',
+    examples: { 
+      xLabel: 'Kills', 
+      yLabel: 'Deaths', 
+      story: 'A player finished 100 rounds with 20 more kills than deaths.',
+      title: 'Epic Battle Stats'
+    }
+  },
+  { 
+    id: 'health-shield', 
+    icon: Heart, 
+    name: 'Health & Shields',
+    color: 'green',
+    examples: { 
+      xLabel: 'Health', 
+      yLabel: 'Shield', 
+      story: 'Your character has 100 protection points with health 20 higher than shield.',
+      title: 'Shield Challenge'
+    }
+  },
+  { 
+    id: 'sports', 
+    icon: Trophy, 
+    name: 'Sports Stats',
+    color: 'orange',
+    examples: { 
+      xLabel: 'Shots Made', 
+      yLabel: 'Shots Missed', 
+      story: 'You took 100 total shots with 20 more makes than misses.',
+      title: 'Basketball Challenge'
+    }
+  },
+  { 
+    id: 'time-challenge', 
+    icon: Clock, 
+    name: 'Time Challenge',
+    color: 'blue',
+    examples: { 
+      xLabel: 'Fast Time', 
+      yLabel: 'Slow Time', 
+      story: 'Two players finished in 100 seconds combined with a 20 second difference.',
+      title: 'Speed Run'
+    }
+  }
+];
 
 const CreatorMode = ({ onSave, onBack }) => {
+  const { user } = useAuth();
   const [scenarioType, setScenarioType] = useState('kills-deaths');
   const [storyText, setStoryText] = useState('');
   const [total, setTotal] = useState(100);
@@ -11,6 +63,13 @@ const CreatorMode = ({ onSave, onBack }) => {
   const [yLabel, setYLabel] = useState('Deaths');
   const [levelTitle, setLevelTitle] = useState('My Custom Level');
   const [creatorName, setCreatorName] = useState('');
+
+  // Auto-fill creator name from signed-in user
+  useEffect(() => {
+    if (user && !creatorName) {
+      setCreatorName(user.displayName || 'Anonymous');
+    }
+  }, [user, creatorName]);
 
   const loadTemplate = (template) => {
     setScenarioType(template.id);
@@ -30,7 +89,7 @@ const CreatorMode = ({ onSave, onBack }) => {
     const solution = calculateSolution();
     const level = {
       title: levelTitle,
-      creator: creatorName || 'Anonymous',
+      creator: creatorName || user?.displayName || 'Anonymous',
       scenarioType,
       story: storyText,
       eq1: `x + y = ${total}`,

@@ -1,9 +1,15 @@
 import { Play, Wand2, Trophy, Sparkles, Zap } from 'lucide-react';
+import AuthButton from './AuthButton';
 
 const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateLevel, onBrowseLevels }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 p-4 flex items-center justify-center">
       <div className="max-w-4xl w-full">
+        {/* Auth Button at Top */}
+        <div className="flex justify-end mb-4">
+          <AuthButton />
+        </div>
+
         <div className="bg-black bg-opacity-50 backdrop-blur-xl rounded-3xl p-12 border-2 border-purple-500 shadow-2xl text-center">
           <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 mb-4 animate-pulse">
             Equation Adventure
