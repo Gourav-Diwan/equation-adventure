@@ -4,14 +4,17 @@ import MainMenu from './components/MainMenu';
 import GameEngine from './components/GameEngine';
 import CreatorMode from './components/CreatorMode';
 import LevelBrowser from './components/LevelBrowser';
+import Leaderboard from './components/Leaderboard';
+import UserProfile from './components/UserProfile';
 import { builtInTemplates } from './data/levelTemplates';
 
 function App() {
-  const [screen, setScreen] = useState('menu'); // 'menu', 'play', 'create', 'browse'
+  const [screen, setScreen] = useState('menu'); // 'menu', 'play', 'create', 'browse', 'leaderboard', 'profile'
   const [currentLevel, setCurrentLevel] = useState(null);
   const [levelIndex, setLevelIndex] = useState(0);
   const [playingCustom, setPlayingCustom] = useState(false);
-  
+  const [profileUser, setProfileUser] = useState(null);
+
   const gameState = useGameState();
 
   const handlePlayBuiltIn = () => {
@@ -59,6 +62,25 @@ function App() {
     }
   };
 
+  const handleViewProfile = (user) => {
+    setProfileUser(user);
+    setScreen('profile');
+  };
+
+  const handleBackToLeaderboard = () => {
+    setProfileUser(null);
+    setScreen('leaderboard');
+  };
+
+  const handleLevelComplete = (levelIdx, solveTime) => {
+    // Record fastest time for this level
+    if (solveTime > 0) {
+      gameState.recordFastestTime(`level_${levelIdx + 1}`, solveTime);
+    }
+    // Increment levels completed
+    gameState.completedLevel();
+  };
+
   return (
     <div className="min-h-screen">
       {screen === 'menu' && (
@@ -69,6 +91,7 @@ function App() {
           onPlayGame={handlePlayBuiltIn}
           onCreateLevel={() => setScreen('create')}
           onBrowseLevels={() => setScreen('browse')}
+          onViewLeaderboard={() => setScreen('leaderboard')}
         />
       )}
 
@@ -81,6 +104,7 @@ function App() {
           badges={gameState.badges}
           onAddPoints={gameState.addPoints}
           onAddBadge={gameState.addBadge}
+          onLevelComplete={handleLevelComplete}
           onNextLevel={handleNextLevel}
           onRetry={handleRetryLevel}
           onBack={handleBackFromGame}
@@ -105,6 +129,22 @@ function App() {
           onDeleteLevel={gameState.deleteCustomLevel}
           onCreateNew={() => setScreen('create')}
           onBack={() => setScreen('menu')}
+        />
+      )}
+
+      {screen === 'leaderboard' && (
+        <Leaderboard
+          user={gameState.user}
+          onBack={() => setScreen('menu')}
+          onViewProfile={handleViewProfile}
+        />
+      )}
+
+      {screen === 'profile' && (
+        <UserProfile
+          user={gameState.user}
+          profileUser={profileUser}
+          onBack={profileUser ? handleBackToLeaderboard : () => setScreen('menu')}
         />
       )}
     </div>

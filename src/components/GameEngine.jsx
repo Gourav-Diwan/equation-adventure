@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react';
 import { Trophy, Zap, Target, Sparkles, Home } from 'lucide-react';
 import Graph from './Graph';
 
-const GameEngine = ({ 
-  level, 
-  levelIndex, 
-  playingCustom, 
-  totalPoints, 
-  badges, 
-  onAddPoints, 
-  onAddBadge, 
-  onNextLevel, 
-  onRetry, 
+const GameEngine = ({
+  level,
+  levelIndex,
+  playingCustom,
+  totalPoints,
+  badges,
+  onAddPoints,
+  onAddBadge,
+  onNextLevel,
+  onRetry,
   onBack,
-  builtInTemplates 
+  onLevelComplete,
+  builtInTemplates
 }) => {
   const [xGuess, setXGuess] = useState('');
   const [yGuess, setYGuess] = useState('');
@@ -25,10 +26,12 @@ const GameEngine = ({
   const [showSolution, setShowSolution] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [graphData, setGraphData] = useState([]);
+  const [startTime, setStartTime] = useState(null);
 
   useEffect(() => {
     generateGraphData();
     resetState();
+    setStartTime(Date.now());
   }, [level]);
 
   const generateGraphData = () => {
@@ -82,7 +85,15 @@ const GameEngine = ({
       setPoints(earnedPoints);
       onAddPoints(earnedPoints);
       setShowCelebration(true);
-      
+
+      // Calculate solve time in seconds
+      const solveTime = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+
+      // Call completion callback with level info and time
+      if (onLevelComplete) {
+        onLevelComplete(levelIndex, solveTime);
+      }
+
       if (attempts === 0 && !badges.includes('first-try')) {
         onAddBadge('first-try');
         setFeedback(`🔥 FIRST TRY LEGEND! +${earnedPoints} points!`);
@@ -92,7 +103,7 @@ const GameEngine = ({
       } else {
         setFeedback(`🎮 VICTORY! Solved in ${attempts + 1} attempts! +${earnedPoints} points!`);
       }
-      
+
       setTimeout(() => setShowCelebration(false), 3000);
     } else {
       const eq1Error = Math.abs((x + y) - level.total);

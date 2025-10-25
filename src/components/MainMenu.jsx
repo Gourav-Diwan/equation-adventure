@@ -1,7 +1,7 @@
 import { Play, Wand2, Trophy, Sparkles, Zap } from 'lucide-react';
 import AuthButton from './AuthButton';
 
-const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateLevel, onBrowseLevels }) => {
+const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateLevel, onBrowseLevels, onViewLeaderboard }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 p-4 flex items-center justify-center">
       <div className="max-w-4xl w-full">
@@ -16,7 +16,7 @@ const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateL
           </h1>
           <p className="text-purple-200 text-xl mb-12">Master equations through gaming! 🎮</p>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <button
               onClick={onPlayGame}
               className="bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-8 rounded-2xl transition-all transform hover:scale-105 shadow-xl"
@@ -25,7 +25,7 @@ const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateL
               <h2 className="text-2xl font-bold mb-2">Play Game</h2>
               <p className="text-purple-100 text-sm">Solve built-in levels</p>
             </button>
-            
+
             <button
               onClick={onCreateLevel}
               className="bg-gradient-to-br from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white p-8 rounded-2xl transition-all transform hover:scale-105 shadow-xl"
@@ -34,7 +34,7 @@ const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateL
               <h2 className="text-2xl font-bold mb-2">Create Level</h2>
               <p className="text-green-100 text-sm">Design your own challenge</p>
             </button>
-            
+
             <button
               onClick={onBrowseLevels}
               className="bg-gradient-to-br from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white p-8 rounded-2xl transition-all transform hover:scale-105 shadow-xl"
@@ -42,6 +42,15 @@ const MainMenu = ({ totalPoints, badges, customLevelCount, onPlayGame, onCreateL
               <Trophy className="mx-auto mb-4" size={48} />
               <h2 className="text-2xl font-bold mb-2">My Levels</h2>
               <p className="text-blue-100 text-sm">{customLevelCount} custom levels</p>
+            </button>
+
+            <button
+              onClick={onViewLeaderboard}
+              className="bg-gradient-to-br from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700 text-white p-8 rounded-2xl transition-all transform hover:scale-105 shadow-xl"
+            >
+              <Trophy className="mx-auto mb-4" size={48} />
+              <h2 className="text-2xl font-bold mb-2">Leaderboard</h2>
+              <p className="text-orange-100 text-sm">Top players worldwide</p>
             </button>
           </div>
 
